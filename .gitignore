@@ -4,6 +4,7 @@ dist/
 build/
 controllers/
 services/
+repository/
 
 # TypeScript
 *.tsbuildinfo
