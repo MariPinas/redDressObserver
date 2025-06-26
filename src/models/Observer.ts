@@ -1,8 +1,9 @@
 export class Observer {
+  id?: number;
   email: string;
   product: string;
 
-  constructor(email: string, product: string) {
+  constructor(email: string, product: string, id?: number) {
     if (!email.includes("@")) {
       throw new Error("Email inválido");
     }
@@ -11,5 +12,6 @@ export class Observer {
     }
     this.email = email;
     this.product = product;
+    if (id) this.id = id;
   }
 }

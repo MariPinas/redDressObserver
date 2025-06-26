@@ -1,4 +1,9 @@
 import express from "express";
+import {
+  inscreverObservador,
+  desinscreverObservador,
+  notificarObservadores,
+} from "./controllers/NotificationController";
 
 const app = express();
 const PORT = 3040;
