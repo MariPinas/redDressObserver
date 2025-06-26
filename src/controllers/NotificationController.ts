@@ -34,9 +34,9 @@ export async function desinscreverObservador(req: Request, res: Response) {
 
 export async function notificarObservadores(req: Request, res: Response) {
   try {
-    const { product } = req.body;
+    const { product, message } = req.body;
 
-    const emailsNotificados = await service.notificar(product);
+    const emailsNotificados = await service.notificar(product, message);
 
     res.status(200).json({
       mensagem: "Notificações enviadas com sucesso!",

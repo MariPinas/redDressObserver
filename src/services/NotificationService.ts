@@ -31,19 +31,22 @@ export class NotificationService {
     await this.repository.deleteObserver(email, product);
   }
 
-  async notificar(product: string): Promise<string[]> {
-    if (!product) {
-      throw new Error("Produto é obrigatório para notificação.");
-    }
-
+  async notificar(product: string, message: string): Promise<string[]> {
     const observers = await this.repository.getObserversByProduct(product);
-    const emails = observers.map((o) => o.email);
+
+    const notificacoes: string[] = [];
+    // so pra fingir um envio no email
+    for (const observer of observers) {
+      const msg = `Para ${observer.email}: ${message}`;
+      console.log(msg);
+      notificacoes.push(msg);
+    }
 
     // tem q remover todos dps de notificar?
     // for (const observer of observers) {
     //   if (observer.id) await this.repository.deleteObserverById(observer.id);
     // }
 
-    return emails;
+    return notificacoes;
   }
 }
