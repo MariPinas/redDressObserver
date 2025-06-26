@@ -34,15 +34,22 @@ export async function desinscreverObservador(req: Request, res: Response) {
 
 export async function notificarObservadores(req: Request, res: Response) {
   try {
-    const { product, message } = req.body;
+    const { product } = req.body;
 
-    const emailsNotificados = await service.notificar(product, message);
+    if (!product) {
+      return res.status(400).json({ message: "Produto é obrigatório." });
+    }
+
+    const mensagens = await service.notificar(
+      product,
+      `O produto '${product}' está disponível em estoque!`
+    );
 
     res.status(200).json({
-      mensagem: "Notificações enviadas com sucesso!",
-      notificados: emailsNotificados,
+      message: `Notificações enviadas com sucesso.`,
+      notificacoes: mensagens,
     });
   } catch (error: any) {
-    res.status(400).json({ mensagem: error.message });
+    res.status(500).json({ message: error.message });
   }
 }
