@@ -2,16 +2,18 @@
   "name": "reddressobserver",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node dist/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MariPinas/redDressObserver.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Mariana Santos",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/MariPinas/redDressObserver/issues"
