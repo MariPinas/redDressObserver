@@ -2,8 +2,6 @@
 node_modules/
 dist/
 build/
-services/
-repository/
 
 # TypeScript
 *.tsbuildinfo
