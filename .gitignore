@@ -1,0 +1,28 @@
+# Node.js
+node_modules/
+dist/
+build/
+
+# TypeScript
+*.tsbuildinfo
+
+# Logs
+logs/
+*.log
+
+# Environment
+.env
+
+# SSL Certs
+cert/*.pem
+
+# Sistema Operacional
+.DS_Store
+Thumbs.db
+
+# Editor (VSCode, JetBrains etc.)
+.vscode/
+.idea/
+
+# Testes
+coverage/
