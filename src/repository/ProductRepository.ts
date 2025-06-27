@@ -63,6 +63,23 @@ export class ProductRepository {
     return null;
   }
 
+  async decreaseQuantity(
+    productName: string,
+    quantidade: number
+  ): Promise<Product> {
+    const existing = await this.findByName(productName);
+    if (!existing) throw new Error("Produto não encontrado");
+
+    if (existing.quantity < quantidade) throw new Error("Estoque insuficiente");
+
+    existing.quantity -= quantidade;
+
+    const query = `UPDATE product SET quantity = ? WHERE id = ?`;
+    await executarComandoSQL(query, [existing.quantity, existing.id]);
+
+    return existing;
+  }
+
   async findById(id: number): Promise<Product | null> {
     const query = `SELECT * FROM product WHERE id = ?`;
     const results: Product[] = await executarComandoSQL(query, [id]);
