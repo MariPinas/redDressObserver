@@ -32,14 +32,16 @@ export async function desinscreverObservador(req: Request, res: Response) {
   }
 }
 
-export async function notificarObservadores(req: Request, res: Response) {
+export async function notificarObservadores(
+  req: Request,
+  res: Response
+): Promise<any> {
   try {
     const { product } = req.body;
 
     if (!product) {
       return res.status(400).json({ message: "Produto é obrigatório." });
     }
-
     const mensagens = await service.notificar(
       product,
       `O produto '${product}' está disponível em estoque!`

@@ -31,4 +31,32 @@ export class ProductService {
 
     return product;
   }
+
+  async removeFromStock(
+    name: string,
+    quantityToRemove: number
+  ): Promise<Product> {
+    const product = await this.productRepo.findByName(name);
+
+    if (!product) {
+      throw new Error("Produto não encontrado.");
+    }
+
+    if (quantityToRemove <= 0) {
+      throw new Error("A quantidade a remover deve ser maior que zero.");
+    }
+
+    if (product.quantity < quantityToRemove) {
+      throw new Error("Estoque insuficiente para remover essa quantidade.");
+    }
+
+    product.quantity -= quantityToRemove;
+    await this.productRepo.save(product);
+
+    if (product.quantity === 0) {
+      console.log(`Estoque do produto '${product.name}' esgotado.`);
+    }
+
+    return product;
+  }
 }
