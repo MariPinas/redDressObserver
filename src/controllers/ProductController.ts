@@ -22,6 +22,17 @@ export async function addProduct(req: Request, res: Response) {
   }
 }
 
+export async function filtrarProduto(req: Request, res: Response) {
+  try {
+    const quantidade = await productService.getQuantity(req.query.name);
+    res.status(200).json({
+      quantity: quantidade,
+    });
+  } catch (error: any) {
+    res.status(400).json({ message: error.message });
+  }
+}
+
 export async function removeProduct(req: Request, res: Response) {
   try {
     const { name, quantity } = req.body;

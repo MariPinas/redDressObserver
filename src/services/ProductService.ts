@@ -32,6 +32,15 @@ export class ProductService {
     return product;
   }
 
+  async getQuantity(productName: any): Promise<number> {
+    console.log(`${productName} bgl 2`);
+    if (!productName || typeof productName !== "string") {
+      throw new Error("Nome do produto é obrigatório.");
+    }
+    const quant = await this.productRepo.getQuantityByName(productName);
+    return quant;
+  }
+
   async removeFromStock(
     name: string,
     quantityToRemove: number

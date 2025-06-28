@@ -89,4 +89,21 @@ export class ProductRepository {
     }
     return null;
   }
+
+  async getQuantityByName(name: string): Promise<number> {
+    const query = "SELECT quantity FROM lojinha.product where name = ?";
+
+    try {
+      const resultado = await executarComandoSQL(query, [name]);
+      console.log("Produto localizado com sucesso, quantidade: ", resultado);
+      return new Promise<number>((resolve) => {
+        resolve(resultado);
+      });
+    } catch (err: any) {
+      console.error(
+        `Falha ao procurar o produto de ID ${name} gerando o erro: ${err}`
+      );
+      throw err;
+    }
+  }
 }
