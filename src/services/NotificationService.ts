@@ -31,22 +31,15 @@ export class NotificationService {
     await this.repository.deleteObserver(email, product);
   }
 
-  async notificar(product: string, message: string): Promise<string[]> {
+  async notificar(product: string, message: string): Promise<void> {
     const observers = await this.repository.getObserversByProduct(product);
 
-    const notificacoes: string[] = [];
-    // so pra fingir um envio no email
-    for (const observer of observers) {
-      const msg = `Para ${observer.email}: ${message}`;
-      console.log(msg);
-      notificacoes.push(msg);
-    }
+    // Não envia emails, apenas registra para uso futuro
+    console.log(
+      `[Notificação] Produto "${product}" disponível! Observadores: ${observers.length}`
+    );
 
-    // tem q remover todos dps de notificar?
-    // for (const observer of observers) {
-    //   if (observer.id) await this.repository.deleteObserverById(observer.id);
-    // }
-
-    return notificacoes;
+    // Não remove os inscritos para que possam ser notificados novamente
+    // quando o estoque zerar e voltar a ter disponibilidade
   }
 }

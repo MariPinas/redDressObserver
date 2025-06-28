@@ -1,20 +1,26 @@
 import { Request, Response } from "express";
 import { ProductService } from "../services/ProductService";
+import { onStockUpdated } from "../app";
 
 const productService = new ProductService();
 
-export async function addProduct(req: Request, res: Response) {
+export async function addProduct(req: Request, res: Response): Promise<any> {
   try {
     const { name, quantity } = req.body;
-    if (typeof name !== "string" || typeof quantity !== "number") {
-      res.status(400).json({ message: "Nome e quantidade são obrigatórios." });
-      return;
+    if (
+      typeof name !== "string" ||
+      typeof quantity !== "number" ||
+      quantity <= 0
+    ) {
+      return res
+        .status(400)
+        .json({ message: "Nome e quantidade positiva são obrigatórios." });
     }
 
     const product = await productService.addOrUpdateProduct(name, quantity);
 
     res.status(200).json({
-      message: `Produto '${product.name}' atualizado. Quantidade em estoque: ${product.quantity}`,
+      message: `Produto '${product.name}' atualizado. Estoque: ${product.quantity}`,
       product,
     });
   } catch (error: any) {

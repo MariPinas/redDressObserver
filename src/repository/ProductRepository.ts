@@ -32,24 +32,34 @@ export class ProductRepository {
   }
 
   async save(product: Product): Promise<Product> {
-    if (product.id) {
-      // update o produto da lojinha
-      const query = `UPDATE product SET name = ?, quantity = ? WHERE id = ?`;
-      await executarComandoSQL(query, [
-        product.name,
-        product.quantity,
-        product.id,
-      ]);
-      return product;
-    } else {
-      // insert o product se nao tem esse produto a ser salvado
-      const query = `INSERT INTO product (name, quantity) VALUES (?, ?)`;
-      const result: any = await executarComandoSQL(query, [
-        product.name,
-        product.quantity,
-      ]);
-      product.id = result.insertId;
-      return product;
+    // update o produto da lojinha
+    const query = `UPDATE product SET name = ?, quantity = ? WHERE id = ?`;
+
+    try {
+      if (product.id) {
+        await executarComandoSQL(query, [
+          product.name,
+          product.quantity,
+          product.id,
+        ]);
+        return product;
+      } else {
+        // insert o product se nao tem esse produto a ser salvado
+        const query = `INSERT INTO product (name, quantity) VALUES (?, ?)`;
+        const result: any = await executarComandoSQL(query, [
+          product.name,
+          product.quantity,
+        ]);
+        product.id = result.insertId;
+        return new Promise<Product>((resolve) => {
+          resolve(product);
+        });
+      }
+    } catch (err: any) {
+      console.error(
+        `Falha ao procurar o produto de Nome ${product.name} gerando o erro: ${err}`
+      );
+      throw err;
     }
   }
 

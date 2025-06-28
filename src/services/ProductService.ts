@@ -1,7 +1,7 @@
 import { Product } from "../models/Product";
 import { ProductRepository } from "../repository/ProductRepository";
 import { NotificationService } from "./NotificationService";
-
+import { broadcastNotification } from "../app";
 export class ProductService {
   private productRepo = ProductRepository.getInstance();
   private notificationService = new NotificationService();
@@ -11,25 +11,49 @@ export class ProductService {
     quantityToAdd: number
   ): Promise<Product> {
     let product = await this.productRepo.findByName(name);
+    const oldQuantity = product ? product.quantity : 0;
+
     if (!product) {
-      product = new Product(name, 0); //se nao tem esse produto cria ele dando um new dps salva
+      product = new Product(name, 0);
     }
 
-    const oldQuantity = product.quantity;
     product.quantity += quantityToAdd;
 
     if (product.quantity < 0) {
-      throw new Error("Quantidade não pode ser negativa ' - ' ...");
+      throw new Error("Quantidade não pode ser negativa");
     }
 
     await this.productRepo.save(product);
 
     if (oldQuantity <= 0 && product.quantity > 0) {
-      const message = `O produto '${product.name}' agora está disponível em estoque! :D`;
-      await this.notificationService.notificar(product.name, message);
+      await this.handleStockNotifications(product, oldQuantity);
     }
 
     return product;
+  }
+
+  private async handleStockNotifications(
+    product: Product,
+    oldQuantity: number
+  ) {
+    const message = `O produto '${product.name}' agora está disponível! Estoque: ${product.quantity}`;
+
+    try {
+      await this.notificationService.notificar(product.name, message);
+
+      broadcastNotification(
+        JSON.stringify({
+          type: "STOCK_UPDATE",
+          product: product.name,
+          quantity: product.quantity,
+          message: message,
+        })
+      );
+
+      console.log(`Notificações enviadas para produto: ${product.name}`);
+    } catch (error) {
+      console.error("Erro ao enviar notificações:", error);
+    }
   }
 
   async getQuantity(productName: any): Promise<number> {
