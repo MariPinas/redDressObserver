@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { ProductService } from "../services/ProductService";
-import { onStockUpdated } from "../app";
 
 const productService = new ProductService();
 
